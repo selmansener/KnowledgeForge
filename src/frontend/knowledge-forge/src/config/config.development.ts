@@ -20,8 +20,8 @@ export const config: EnvConfig = {
     },
     authConfig: {
         domain: "selman-personal.eu.auth0.com",
-        clientId: "Fwa753w2BpErTcVb4bi1AGIUsUVh8aXG",
-        redirectUri: "http://localhost:3000",
+        clientId: "hjQNCYtLQiHvJ80QaNcb9dxEIrBJnzvQ",
+        redirectUri: "http://localhost:5173",
         audience: "https://academyplus.com",
         scopes: [
             "openid", 
@@ -30,5 +30,5 @@ export const config: EnvConfig = {
             "read:playlists"
         ]
     },
-    api: "https://localhost:7296"
+    api: "https://localhost:7175"
 };

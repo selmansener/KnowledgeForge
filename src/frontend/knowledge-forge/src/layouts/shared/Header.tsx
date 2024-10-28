@@ -1,10 +1,11 @@
-import { AppBar, Box, Button, Grid2 as Grid, Link, MenuItem, Select, SelectChangeEvent, Toolbar, Typography } from "@mui/material"
+import { AppBar, Avatar, Box, Button, Grid2 as Grid, IconButton, Link, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, Menu as ProfileMenu, Container } from "@mui/material"
 import React, { useMemo } from "react"
 import { config } from "../../config";
 import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useColorScheme } from '@mui/material/styles';
 import ColorLensIcon from '@mui/icons-material/ColorLens';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const menuItems = [
     {
@@ -132,15 +133,92 @@ function LangSwitcher() {
     </Select>
 }
 
+const settings = [
+    {
+        title: 'Profile',
+        path: "/"
+    },
+    {
+        title: 'Account',
+        path: "/"
+    },
+    {
+        title: 'Dashboard',
+        path: "/"
+    },
+    {
+        title: 'Logout',
+        path: "/logout"
+    }
+];
+
+function AuthButton() {
+    const navigate = useNavigate();
+    const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+    const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0();
+
+    if (isLoading) {
+        return;
+    }
+
+    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorElUser(event.currentTarget);
+    };
+
+
+    const handleCloseUserMenu = (path: string) => {
+        setAnchorElUser(null);
+
+        navigate(path);
+    };
+
+    return <React.Fragment>
+        {!isAuthenticated && <Button onClick={() => { loginWithRedirect() }}>
+            Login
+        </Button>}
+        {isAuthenticated && <Box><IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar alt="profile" src="/profile.png" />
+        </IconButton>
+            <ProfileMenu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+            >
+                {settings.map((setting) => (
+                    <MenuItem key={setting.title} onClick={() => handleCloseUserMenu(setting.path)}>
+                        <Typography sx={{ textAlign: 'center' }}>{setting.title}</Typography>
+                    </MenuItem>
+                ))}
+            </ProfileMenu>
+        </Box>
+        }
+    </React.Fragment>
+}
 
 export function Header() {
-    return <React.Fragment>
-        <AppBar position="fixed" color="inherit" elevation={1} 
-            sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 2 })}>
-            <Toolbar>
-                <Grid size={12} container display="flex" alignItems="center">
-                    <Grid size={4}>
-
+    return <AppBar elevation={1}
+        position="relative"
+        sx={(theme) => ({
+            zIndex: theme.zIndex.drawer + 2,
+            mb: 4
+        })}>
+        <Container maxWidth="lg" disableGutters>
+            <Toolbar disableGutters sx={{
+                width: "100%"
+            }}>
+                <Grid width={"100%"} size={12} container display="flex" justifyContent="space-between" alignItems="center">
+                    <Grid size={2}>
                         <Box sx={{
                             display: 'flex',
                             justifyContent: 'flex-start',
@@ -154,7 +232,7 @@ export function Header() {
                     <Grid size={6}>
                         <Menu />
                     </Grid>
-                    <Grid size={2}>
+                    <Grid size={4}>
                         <Box sx={{
                             ml: 2,
                             display: "flex",
@@ -165,10 +243,11 @@ export function Header() {
                             <ColorLensIcon />
                             <ModeSwitcher />
                             <LangSwitcher />
+                            <AuthButton />
                         </Box>
                     </Grid>
                 </Grid>
             </Toolbar>
-        </AppBar>
-    </React.Fragment>
+        </Container>
+    </AppBar>
 }

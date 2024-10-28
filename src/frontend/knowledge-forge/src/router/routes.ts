@@ -32,5 +32,5 @@ export interface RouteConfig {
 
 export const routes: RouteConfig[] = [
     unauthenticatedRoutes,
-    authenticatedRoutes
+    authenticatedRoutes,
 ];
