@@ -1,7 +1,8 @@
-import { Avatar, Box, Grid2 as Grid, Typography } from "@mui/material";
+import { Avatar, Box, Grid2 as Grid, IconButton, Typography } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CommentIcon from '@mui/icons-material/Comment';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 
 export function PostItem() {
 
@@ -25,7 +26,7 @@ export function PostItem() {
             }}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque laoreet maximus vulputate. Aenean rhoncus cursus libero, at mattis odio auctor et. Donec congue augue sed leo congue iaculis. Morbi eleifend scelerisque turpis, nec tincidunt neque ullamcorper ut. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
             </Typography>
-            <Grid container spacing={2} size={12}>
+            <Grid container spacing={2} size={12} display="flex" alignItems={"center"}>
                 <Grid size={2} display="flex">
                     <FavoriteIcon fontSize="small" />
                     <Typography variant="body2" ml={2}>
@@ -43,6 +44,11 @@ export function PostItem() {
                     <Typography variant="body2" ml={2}>
                         26
                     </Typography>
+                </Grid>
+                <Grid size={6} display="flex" justifyContent="flex-end">
+                    <IconButton size="small" >
+                        <BookmarkAddIcon fontSize="inherit" />
+                    </IconButton>
                 </Grid>
             </Grid>
         </Grid>

@@ -1,4 +1,8 @@
 {
+    "MenuItems": {
+        "NewPost": "Write New Post",
+        "About": "About"
+    },
     "Pages": {
         "Landing": {
             "Title": "Empowering communities through accessible knowledge.",

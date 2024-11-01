@@ -1,4 +1,8 @@
 {
+    "MenuItems": {
+        "NewPost": "Yeni Makale Yaz",
+        "About": "Hakkımızda"
+    },
     "Pages": {
         "Landing": {
             "Title": "Empowering communities through accessible knowledge.",

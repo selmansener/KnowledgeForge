@@ -1,24 +1,31 @@
-import { AppBar, Avatar, Box, Button, Grid2 as Grid, IconButton, Link, MenuItem, Select, SelectChangeEvent, Toolbar, Typography, Menu as ProfileMenu, Container } from "@mui/material"
+import { AppBar, Avatar, Box, Button, Grid2 as Grid, IconButton, Link, MenuItem, Toolbar, Typography, Menu as ProfileMenu, Container } from "@mui/material"
 import React, { useMemo } from "react"
-import { config } from "../../config";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useColorScheme } from '@mui/material/styles';
-import ColorLensIcon from '@mui/icons-material/ColorLens';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const menuItems = [
     {
-        title: "Test",
-        path: "/"
+        title: "MenuItems.NewPost",
+        path: "/new-post",
+        isPublic: false
+    },
+    {
+        title: "MenuItems.About",
+        path: "/",
+        isPublic: true
     }
 ]
 
 function Menu() {
+    const { isAuthenticated } = useAuth0();
     const { t } = useTranslation();
+    const _menuItems = useMemo(() => {
+        return menuItems.filter(x => x.isPublic != isAuthenticated);
+    }, [isAuthenticated]);
 
     return <Grid container spacing={2} display="flex" justifyContent="flex-end">
-        {menuItems.map(item => {
+        {_menuItems.map(item => {
             return <Grid key={item.title}>
                 <Link to={item.path} component={NavLink}>
                     {t(item.title)}
@@ -28,110 +35,6 @@ function Menu() {
     </Grid>
 }
 
-type themeMode = 'light' | 'dark' | 'system';
-
-function ModeSwitcher() {
-    const { mode, setMode } = useColorScheme();
-
-    if (!mode) {
-        return null;
-    }
-
-    return (
-        <Select
-            size="small"
-            value={mode}
-            onChange={(event) => {
-                setMode(event.target.value as themeMode);
-            }}
-        >
-            <MenuItem value="system">System</MenuItem >
-            <MenuItem value="light">Light</MenuItem >
-            <MenuItem value="dark">Dark</MenuItem >
-        </Select>
-    );
-}
-
-const supportedLanguages = [
-    {
-        code: "tr",
-        lang: "Türkçe",
-        iconCode: "tr"
-    },
-    {
-        code: "en",
-        lang: "English",
-        iconCode: "us"
-    },
-]
-
-function LangSwitcher() {
-    const { i18n } = useTranslation();
-
-    const supportedLanguages = useMemo(() => {
-        return [
-            {
-                code: "tr",
-                lang: "Türkçe",
-                iconCode: "tr"
-            },
-            {
-                code: "en",
-                lang: "English",
-                iconCode: "us"
-            },
-        ];
-    }, []);
-
-    const handleLanguageChange = (event: SelectChangeEvent) => {
-        let lang;
-        switch (event.target.value) {
-            case "en":
-            case "en-GB":
-            case "en-US":
-                lang = "en";
-                break;
-            case "tr":
-                lang = "tr";
-        }
-
-        i18n.changeLanguage(lang);
-    }
-
-    const getLanguage = () => {
-        switch (i18n.language) {
-            case "en-GB":
-            case "en-US":
-            case "en":
-                return "en";
-            case "tr-TR":
-            case "tr":
-            default:
-                return "tr";
-        }
-    }
-    return <Select
-        value={getLanguage()}
-        onChange={handleLanguageChange}
-        size={"small"}
-        sx={{ mr: 2 }}
-    >
-        {supportedLanguages.map(supportedLang => (
-            <MenuItem value={supportedLang.code} key={supportedLang.lang}>
-                <img
-                    loading="lazy"
-                    width="20"
-                    src={`https://flagcdn.com/w20/${supportedLang.iconCode}.png`}
-                    srcSet={`https://flagcdn.com/w40/${supportedLang.iconCode}.png 2x`}
-                    alt={supportedLang.code}
-                />
-                <Typography variant="caption" sx={{ pl: 1 }}>
-                    {supportedLang.lang}
-                </Typography>
-            </MenuItem>
-        ))}
-    </Select>
-}
 
 const settings = [
     {
@@ -229,22 +132,11 @@ export function Header() {
                             </Link>
                         </Box>
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={9}>
                         <Menu />
                     </Grid>
-                    <Grid size={4}>
-                        <Box sx={{
-                            ml: 2,
-                            display: "flex",
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-evenly",
-                        }}>
-                            <ColorLensIcon />
-                            <ModeSwitcher />
-                            <LangSwitcher />
-                            <AuthButton />
-                        </Box>
+                    <Grid size={1} display="flex" justifyContent="flex-end">
+                        <AuthButton />
                     </Grid>
                 </Grid>
             </Toolbar>
